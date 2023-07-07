@@ -22,6 +22,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { MatBadgeModule } from '@angular/material/badge';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 //import { NotificationComponent } from './components/notification/notification.component';
@@ -45,6 +46,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ViewPostsComponent } from './pages/view-posts/view-posts.component';
 import { PostListComponent } from './components/posts/post-list/post-list.component';
 import { TrendingPostsComponent } from './components/posts/trending-posts/trending-posts.component';
+import { UserRecommendationsComponent } from './components/recommendations/user-recommendations/user-recommendations.component';
 
 @NgModule({
   declarations: [
@@ -61,12 +63,12 @@ import { TrendingPostsComponent } from './components/posts/trending-posts/trendi
     NotificationMessageComponent,
     FollowComponent,
     HomeComponent,
-    CreatePostComponent,
     RegisterComponent,
     LoginComponent,
     ThemeSwitcherComponent,
     ViewPostsComponent,
     TrendingPostsComponent,
+    UserRecommendationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,33 +77,23 @@ import { TrendingPostsComponent } from './components/posts/trending-posts/trendi
     FormsModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-
-    HttpClientModule,
-    MatCardModule,
     MatInputModule,
-    ReactiveFormsModule,
-
-    MatCardModule,
     MatButtonModule,
     MatExpansionModule,
     MatListModule,
     MatBadgeModule,
     HttpClientModule,
-    MatInputModule,
     MatIconModule,
-    MatButtonModule,
     MatFormFieldModule,
-    MatCardModule,
-    ReactiveFormsModule,
     MatCardModule,
     NgxDropzoneModule,
     MatProgressSpinnerModule,
-    HttpClientModule,
     MatTooltipModule,
     MatMenuModule,
     ToastModule,
     MatChipsModule,
     MatTabsModule,
+    ScrollingModule,
   ],
   providers: [
     RouteguardService,

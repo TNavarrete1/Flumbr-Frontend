@@ -10,6 +10,7 @@ import { RouteguardService } from './services/routeguard.service';
 
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ViewPostsComponent } from './pages/view-posts/view-posts.component';
+import { UserRecommendationsComponent } from './components/recommendations/user-recommendations/user-recommendations.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,7 @@ const routes: Routes = [
     path: 'posts',
     component: ViewPostsComponent,
   },
+  { path: 'recommendations/users', component: UserRecommendationsComponent },
   { path: '**', component: NotfoundComponent },
 ];
 

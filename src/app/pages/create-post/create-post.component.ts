@@ -105,7 +105,9 @@ export class CreatePostComponent implements OnInit {
 
   onMessageChange(message: string) {
     // get all strings that begin with #
-    let tags: string[] | null = message.match(/#[A-Za-z0-9]+/gi);
+    const tags: string[] | null = message
+      ? message.match(/#[A-Za-z0-9]+/gi)
+      : [];
 
     if (tags) {
       this.tags = tags;

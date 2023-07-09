@@ -36,6 +36,8 @@ import { NotificationMessageComponent } from './components/notification-panel/no
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { FollowComponent } from './components/follow/follow.component';
+import { ProfileSelectorComponent } from './components/profile-selector/profile-selector.component';
+import { MatSelectModule } from '@angular/material/select';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AuthInterceptorService } from './services/auth/auth-interceptor.service';
@@ -47,6 +49,10 @@ import { ViewPostsComponent } from './pages/view-posts/view-posts.component';
 import { PostListComponent } from './components/posts/post-list/post-list.component';
 import { TrendingPostsComponent } from './components/posts/trending-posts/trending-posts.component';
 import { UserRecommendationsComponent } from './components/recommendations/user-recommendations/user-recommendations.component';
+import { FeedPostsComponent } from './components/posts/feed-posts/feed-posts.component';
+import { FollowingPostsComponent } from './components/posts/following-posts/following-posts.component';
+import { ResetPasswordComponent } from './pages/verify-account/reset-password/reset-password.component';
+import { NewPasswordComponent } from './pages/verify-account/new-password/new-password.component';
 
 @NgModule({
   declarations: [
@@ -65,10 +71,15 @@ import { UserRecommendationsComponent } from './components/recommendations/user-
     HomeComponent,
     RegisterComponent,
     LoginComponent,
+    ProfileSelectorComponent,
     ThemeSwitcherComponent,
     ViewPostsComponent,
     TrendingPostsComponent,
     UserRecommendationsComponent,
+    FeedPostsComponent,
+    FollowingPostsComponent,
+    ResetPasswordComponent,
+    NewPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,19 +88,20 @@ import { UserRecommendationsComponent } from './components/recommendations/user-
     FormsModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
+    HttpClientModule,
+    MatCardModule,
     MatInputModule,
     MatButtonModule,
     MatExpansionModule,
     MatListModule,
     MatBadgeModule,
-    HttpClientModule,
     MatIconModule,
     MatFormFieldModule,
-    MatCardModule,
     NgxDropzoneModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatMenuModule,
+    MatSelectModule,
     ToastModule,
     MatChipsModule,
     MatTabsModule,

@@ -77,6 +77,35 @@
             </form>
           </div>
         </div>
+
+        <div *ngIf="modifyBio" class="flex flex-col mr-auto">
+          <div class="">
+            <p>
+              <em>Enter tags</em>
+            </p>
+
+            <form [formGroup]="tagsForm" class="flex flex-col">
+              <mat-form-field class="form-field">
+                <mat-label>Profile tags</mat-label>
+                <mat-chip-grid #chipGrid aria-label="Enter tags" formControlName="tags">
+                  <mat-chip-row 
+                    *ngFor="let tag of tags"
+                    (removed)="removeTag(tag)"
+                    [style.background-color]="'#ff3f80'">
+                    {{tag.name}}
+                    <button matChipRemove aria-label="'remove ' + keyword">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip-row>
+                </mat-chip-grid>
+                <input placeholder="New tag..."
+                        [matChipInputFor]="chipGrid"
+                        (matChipInputTokenEnd)="addTag($event)"/>
+              </mat-form-field>
+              <button mat-raised-button color="accent" type="submit">Update tags</button>
+            </form>
+          </div>
+        </div>
       </mat-card>
     </div>
     <app-trending-posts></app-trending-posts>

@@ -1,83 +1,90 @@
 import { Component } from '@angular/core';
-import {ProfilePayload} from "../../models/profile-payload";
-import {TagPayload} from "../../models/tag-payload";
-import {ProfileService} from "../../services/profile-service";
-import {FormControl, FormGroup} from "@angular/forms";
-import {BioPayload} from "../../models/bio-payload";
-import {PostService} from "../../services/post/post.service";
-import {PostRes} from "../../models/post/post";
+import { ProfilePayload } from '../../models/profile-payload';
+import { TagPayload } from '../../models/tag-payload';
+import { ProfileService } from '../../services/profile-service';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { BioPayload } from '../../models/bio-payload';
+import { PostService } from '../../services/post/post.service';
+import { PostRes } from '../../models/post/post';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { AppSettings } from 'src/app/global/app-settings';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent {
   profile!: ProfilePayload;
   modifyBio: boolean = false;
   follow: boolean = false;
   posts!: Array<PostRes>;
-  theme: string = "default";
+  theme: string = 'default';
+  tagsForm!: FormGroup;
 
   //utilize file upload service
   files: File[] = [];
   isImage: boolean = false;
   shortLink: string | null = null;
 
-
   // bio form
   changeBioForm = new FormGroup({
-    bio: new FormControl(null)
-  })
+    bio: new FormControl(null),
+  });
 
   tags: TagPayload[] = [];
 
-  constructor(private profileService: ProfileService,
-              private postService: PostService) { }
+  constructor(
+    private profileService: ProfileService,
+    private postService: PostService,
+    private fb: FormBuilder
+  ) {}
 
   // Retrieve profile information
-  ngOnInit () {
-
-    this.profileService.getUserTest().subscribe( {
-
+  ngOnInit() {
+    this.profileService.getUserTest().subscribe({
       next: (resp: any) => {
         this.profile = resp;
         console.log(this.profile);
       },
       error: (err) => {
-        console.error("Issue with retrieving profile details");
+        console.error('Issue with retrieving profile details');
         console.log(err);
-      }
-    })
+      },
+    });
     //this.ngAfterInit();
+    this.tagsForm = this.fb.group({
+      tags: [[], Validators.required],
+    });
   }
 
   // boolean toggle for modifying bio
   modifyProfileBio() {
-
     if (this.modifyBio == false) {
       this.modifyBio = true;
     } else {
       this.modifyBio = false;
     }
-    console.log("toggle modifying bio to: " + this.modifyBio)
+    console.log('toggle modifying bio to: ' + this.modifyBio);
   }
 
   // submits form for biography
   submitForm(): void {
     if (!this.changeBioForm.valid) {
-      console.log("bio form not set")
+      console.log('bio form not set');
     }
 
     const payload: BioPayload = {
-      bio: this.changeBioForm.controls.bio.value!
-    }
+      bio: this.changeBioForm.controls.bio.value!,
+    };
     this.profile.bio = payload.bio;
-    console.log("New bio is: " + payload.bio);
-
+    console.log('New bio is: ' + payload.bio);
   }
-
-
 
   // event when adding folder into drop down
   onSetImage(event: any) {
@@ -86,14 +93,12 @@ export class ProfileComponent {
       //this.uploadForm.get().setValue(file);
     }
 
-
     this.files.push(...event.addedFiles);
     if (this.files.length > 1) {
       this.files.splice(0, 1);
     }
     this.setImageAndVideoFlags();
   }
-
 
   //
   setImageAndVideoFlags() {
@@ -122,14 +127,12 @@ export class ProfileComponent {
     this.follow = !this.follow;
   }
 
-
   // run this after initial data gather: use if dependent on get profiles
   ngAfterInit() {
-
     this.postService.getPosts().subscribe({
       next: (res) => {
         this.posts = res;
-        console.log("Posts hit on profile: " + res);
+        console.log('Posts hit on profile: ' + res);
       },
       error: (err) => {
         console.log(err);
@@ -137,4 +140,29 @@ export class ProfileComponent {
     });
   }
 
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our tag
+    if (value && this.tags.length < AppSettings.PROFILE_TAG_LIMIT) {
+      const index = this.tags.findIndex(
+        (tag) => tag.name.toLowerCase() === value.toLowerCase()
+      );
+      if (index < 0) {
+        this.tags.push({
+          name: value,
+        });
+      }
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+  }
+
+  removeTag(tag: TagPayload) {
+    const index = this.tags.findIndex((tag) => tag.name === tag.name);
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+    }
+  }
 }

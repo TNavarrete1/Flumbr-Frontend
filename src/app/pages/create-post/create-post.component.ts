@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NgEventBus } from 'ng-event-bus';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { AppSettings } from 'src/app/global/app-settings';
-import { FileUploadService } from 'src/app/services/file-upload.service';
+import { EventBusEvents } from 'src/app/global/event-bus-events';
 import { PostService } from 'src/app/services/post/post.service';
 
 @Component({
@@ -19,12 +22,15 @@ export class CreatePostComponent implements OnInit {
   files: File[] = [];
   isImage: boolean = false;
   isVideo: boolean = false;
-  tags: string[] = [];
+  tags: string[] | null = [];
 
   constructor(
+    public dialogRef: MatDialogRef<CreatePostComponent>,
     private fb: FormBuilder,
+    private router: Router,
     private messageService: MessageService,
-    private postService: PostService
+    private postService: PostService,
+    private eventBus: NgEventBus
   ) {}
 
   atLeastOneValidator = (keys: string[]) => {
@@ -105,15 +111,9 @@ export class CreatePostComponent implements OnInit {
 
   onMessageChange(message: string) {
     // get all strings that begin with #
-    const tags: string[] | null = message
-      ? message.match(/#[A-Za-z0-9]+/gi)
+    this.tags = message
+      ? (message.match(/#[A-Za-z0-9]+/gi)! || []).map((x) => x.slice(1))
       : [];
-
-    if (tags) {
-      this.tags = tags;
-    } else {
-      this.tags = [];
-    }
   }
 
   submitPostForm() {
@@ -124,6 +124,10 @@ export class CreatePostComponent implements OnInit {
     const message = this.postForm.controls['message'].value;
     if (message) {
       formData.append('message', message);
+      const uniqueTags = [...new Set(this.tags)];
+      for (let i = 0; i < uniqueTags.length; i++) {
+        formData.append('tags', uniqueTags[i]);
+      }
     }
 
     const file = this.postForm.controls['file'].value;
@@ -151,7 +155,9 @@ export class CreatePostComponent implements OnInit {
           this.files = [];
           this.setImageAndVideoFlags();
           this.tags = [];
-          // navigate to post detail screen
+          this.eventBus.cast(EventBusEvents.POST_CREATE, '');
+          this.router.navigate(['/posts']);
+          this.dialogRef.close([]);
         },
         error: (error) => {
           this.messageService.add({
@@ -162,5 +168,10 @@ export class CreatePostComponent implements OnInit {
           });
         },
       });
+  }
+
+  onCancelClick(event: any): void {
+    event.preventDefault();
+    this.dialogRef.close([]);
   }
 }

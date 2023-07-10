@@ -23,6 +23,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgEventBus } from 'ng-event-bus';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 //import { NotificationComponent } from './components/notification/notification.component';
@@ -106,6 +108,7 @@ import { NewPasswordComponent } from './pages/verify-account/new-password/new-pa
     MatChipsModule,
     MatTabsModule,
     ScrollingModule,
+    MatDialogModule,
   ],
   providers: [
     RouteguardService,
@@ -116,6 +119,7 @@ import { NewPasswordComponent } from './pages/verify-account/new-password/new-pa
       multi: true,
     },
     MessageService,
+    NgEventBus,
   ],
   bootstrap: [AppComponent],
 })
